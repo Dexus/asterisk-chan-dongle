@@ -1176,8 +1176,17 @@ static int at_response_cmti (struct pvt* pvt, const char* str)
 	}
 	else
 	{
-		ast_log (LOG_ERROR, "[%s] Error parsing incoming sms message alert '%s', disconnecting\n", PVT_ID(pvt), str);
-		return -1;
+		if (CONF_SHARED(pvt, disablesms))
+ 		{
+ 			ast_log (LOG_WARNING, "[%s] SMS reception has been disabled in the configuration.\n", PVT_ID(pvt));
+ 		}
+ 		else
+ 		{
+ 			ast_log (LOG_ERROR, "[%s] Error parsing incoming sms message alert '%s', disconnecting\n", PVT_ID(pvt), str);
+ 			return -1;
+ 		}
+ 
+ 		return 0;
 	}
 }
 
